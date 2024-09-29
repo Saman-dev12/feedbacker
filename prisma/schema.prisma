@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    password      String?
+    image         String?
+    provider String?
+    oauth_id String?
+    posts         Post[]    // One-to-many relationship with Post
+
+    @@map("users") // Optional: Map to "users" table if needed
+}
+
+model Post {
+    id          Int      @id @default(autoincrement())
+    title       String  
+    description String  
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    createdBy   User     @relation(fields: [createdById], references: [id], onDelete: Cascade)
+    createdById String    // Foreign key to User model
+
+    feedbacks   Feedback[] // One-to-many relationship with Feedback
+
+    @@index([title]) // Create an index on the title for search optimization
+}
+
+model Feedback {
+    id          Int      @id @default(autoincrement())
+    content     String   // The actual feedback content
+    createdAt   DateTime @default(now())
+    postId      Int      // Foreign key to Post
+    post        Post     @relation(fields: [postId], references: [id])
+    nickname    String?  // Optional nickname for the user providing feedback
+    isAnonymous Boolean  @default(true) // Indicates if feedback is anonymous
+
+    @@index([postId]) // Index on postId for efficient lookups
+}
