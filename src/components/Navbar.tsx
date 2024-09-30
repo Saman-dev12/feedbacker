@@ -62,10 +62,10 @@ const Navbar: React.FC = () => {
                   </div>
                 </button>
                 {dropdownOpen && (
-                  <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="px-4 py-2 text-xs text-gray-500">{session.user.email}</div>
-                    <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Dashboard</Link>
-                    <button onClick={logout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</button>
+                  <div className="dark:bg-gray-600  origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="px-4 py-2 text-xs dark:text-white text-gray-500">{session.user.email}</div>
+                    <Link href="/dashboard" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Dashboard</Link>
+                    <button onClick={logout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">Sign out</button>
                   </div>
                 )}
               </div>
@@ -119,7 +119,7 @@ const Navbar: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="mt-3 space-y-1">
+            <div className="mt-3 space-y-1 ">
               <Link href="/login" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Login</Link>
               <Link href="/register" className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">Sign Up</Link>
             </div>

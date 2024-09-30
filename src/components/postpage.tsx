@@ -10,6 +10,7 @@ import { MessageSquare, ArrowLeft, ThumbsUp, Calendar, User, Sparkles, Copy, Che
 import { useToast } from "~/hooks/use-toast"
 import { getPost } from '~/actions/PostActions'
 import { getFeedbacks } from '~/actions/feedbackActions'
+import { useSession } from 'next-auth/react'
 
 
 interface Post {
@@ -36,7 +37,7 @@ export default function PostPage({id}:{id:number}) {
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([])
   const [copied, setCopied] = useState(false)
   const { toast } = useToast()
-
+  const session = useSession()
   useEffect(() => {
     getCurrentPost(id);
     getCurrentFeedbacks(id);
@@ -94,10 +95,13 @@ export default function PostPage({id}:{id:number}) {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900">
       <div className="container mx-auto px-4 py-8">
         <Link href="/" passHref>
-          <Button variant="outline" className="mb-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+          {session.data?.user && (
+            <Button variant="outline" className="mb-6 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
+          )}
+          
         </Link>
         <Card className="bg-white dark:bg-gray-800 shadow-lg mb-8">
           <CardHeader>
@@ -115,7 +119,8 @@ export default function PostPage({id}:{id:number}) {
                 {/* <span>{post.likes} likes</span> */}
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+                {session.data?.user && (
+            <div className="flex items-center space-x-2"> 
               <Input
                 value={pageUrl}
                 readOnly
@@ -133,7 +138,9 @@ export default function PostPage({id}:{id:number}) {
                   <Copy className="h-4 w-4" />
                 )}
               </Button>
-            </div>
+            </div>      
+                )}
+              
           </CardContent>
         </Card>
         <div className="flex justify-between items-center mb-6">

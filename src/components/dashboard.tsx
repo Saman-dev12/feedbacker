@@ -64,7 +64,6 @@ export default function Dashboard() {
         await fetchPosts();
         setIsOpen(false);
         setNewPost({ title: '', description: '' });
-        router.push(`/post/${post.id}`)
       } else {
         setError('Failed to create post');
       }

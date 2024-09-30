@@ -82,7 +82,7 @@ export default function HeroSection() {
                           />
                         </div>
                         <div className="mt-3 sm:mt-0 sm:ml-3">
-                          <Button className="block w-full py-3 px-4 rounded-md shadow bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-300 dark:focus:ring-blue-700">
+                          <Button className="w-full py-3 px-4 flex justify-center items-center rounded-md shadow-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400 dark:focus:ring-blue-600">
                             Get started
                           </Button>
                         </div>

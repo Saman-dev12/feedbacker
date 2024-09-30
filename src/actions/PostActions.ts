@@ -55,10 +55,10 @@ export const deletePost = async (postId:number) => {
 }
 
 export const getPost = async (postId:number) => {
-    const session = await getServerAuthSession()
-    if (!session) {
-        return;
-    }
+    // const session = await getServerAuthSession()
+    // if (!session) {
+    //     return;
+    // }
     const response = await db.post.findUnique({
         where: {
             id: postId

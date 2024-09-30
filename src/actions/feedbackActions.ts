@@ -18,10 +18,6 @@ export const getFeedbacks = async(id:number) =>{
 }
 
 export const createFeedback = async (postId:number, content:string) => {
-    const session = await getServerAuthSession()
-    if (!session) {
-        return;
-    }
     const response = await db.feedback.create({
         data: {
             content: content,
