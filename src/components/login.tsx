@@ -16,7 +16,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const router = useRouter();
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
     setError(null);
 
     try {
-      signIn('credentials',{email,password,callbackUrl:'/dashboard',redirect:true})
+      await signIn('credentials',{email,password,callbackUrl:'/dashboard',redirect:true})
     } catch (err) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -32,8 +32,8 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+  const handleGoogleSignIn = async() => {
+    await signIn("google", { callbackUrl: "/dashboard" });
   };
 
   return (

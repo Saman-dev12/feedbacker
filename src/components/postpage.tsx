@@ -8,21 +8,28 @@ import { Input } from "~/components/ui/input"
 import Link from 'next/link'
 import { MessageSquare, ArrowLeft, ThumbsUp, Calendar, User, Sparkles, Copy, Check } from 'lucide-react'
 import { useToast } from "~/hooks/use-toast"
+import { getPost } from '~/actions/PostActions'
+import { getFeedbacks } from '~/actions/feedbackActions'
 
-interface Feedback {
-  id: number;
-  content: string;
-  date: string;
-  likes: number;
-}
 
 interface Post {
   id: number;
   title: string;
   description: string;
-  date: string;
-  likes: number;
+  createdAt: Date;
+  updatedAt: Date;
+  createdById: string;
+  feedbacks:Feedback[];
 }
+interface Feedback {
+  id: number;
+  content: string;
+  createdAt: Date;
+  postId: number;
+  nickname: string | null;
+  isAnonymous: boolean;
+}
+
 
 export default function PostPage({id}:{id:number}) {
   const [post, setPost] = useState<Post | null>(null)
@@ -31,14 +38,38 @@ export default function PostPage({id}:{id:number}) {
   const { toast } = useToast()
 
   useEffect(() => {
-    // Simulating API call to fetch post and feedbacks
-    setPost({ id, title: "Sample Post", description: "This is a sample post description. We're looking for honest feedback to improve our product.", date: "2023-06-15", likes: 25 })
-    setFeedbacks([
-      { id: 1, content: "Great initiative! The new feature is intuitive and easy to use. I especially like how it integrates with existing workflows. Keep up the good work!", date: "2023-06-16", likes: 5 },
-      { id: 2, content: "I think there's room for improvement in the UI. The color scheme could be more consistent, and some buttons are not easily discoverable. Otherwise, it's a solid update.", date: "2023-06-17", likes: 3 },
-      { id: 3, content: "This update addresses many of the pain points we had with the previous version. Kudos to the team for listening to user feedback!", date: "2023-06-18", likes: 7 },
-    ])
+    getCurrentPost(id);
+    getCurrentFeedbacks(id);
   }, [id])
+
+  const getCurrentFeedbacks = async(id:number) => {
+    // use getFeedbacks action
+  const response = await getFeedbacks(id);
+  if (response) {
+    setFeedbacks(response as Feedback[]);
+  } else {
+    toast({
+      title: "Error",
+      description: "Failed to fetch the feedbacks.",
+    });
+  }
+
+  }
+
+  const getCurrentPost = async(id:number) => {
+    // use getPost action
+  const response = await getPost(id);
+//   console.log(response);
+  if (response) {
+    setPost(response as Post);
+  } else {
+    toast({
+      title: "Error",
+      description: "Failed to fetch the post.",
+    });
+  }
+    
+  }
 
   const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
 
@@ -77,11 +108,11 @@ export default function PostPage({id}:{id:number}) {
             <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
               <div className="flex items-center">
                 <Calendar className="h-4 w-4 mr-1 text-purple-500" />
-                <span>{post.date}</span>
+                {/* <span>{post.date}</span> */}
               </div>
               <div className="flex items-center">
                 <ThumbsUp className="h-4 w-4 mr-1 text-green-500" />
-                <span>{post.likes} likes</span>
+                {/* <span>{post.likes} likes</span> */}
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -115,36 +146,43 @@ export default function PostPage({id}:{id:number}) {
           </Link>
         </div>
         <div className="space-y-4">
-          {feedbacks.map((feedback) => (
-            <Card key={feedback.id} className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-              <CardHeader>
-                <div className="flex items-start space-x-4">
-                  <Avatar>
-                    <AvatarFallback>{feedback.id}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <CardDescription className="text-gray-700 dark:text-gray-300 text-lg">{feedback.content}</CardDescription>
+          {feedbacks.length > 0 ? (
+            feedbacks.map((feedback) => (
+              <Card key={feedback.id} className="bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                <CardHeader>
+                  <div className="flex items-start space-x-4">
+                    <Avatar>
+                      <AvatarFallback>{feedback.id}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <CardDescription className="text-gray-700 dark:text-gray-300 text-lg">{feedback.content}</CardDescription>
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardFooter>
-                <div className="flex justify-between w-full text-sm text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-1 text-blue-500" />
-                    <span>Anonymous User</span>
+                </CardHeader>
+                <CardFooter>
+                  <div className="flex justify-between w-full text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center">
+                      <User className="h-4 w-4 mr-1 text-blue-500" />
+                      <span>Anonymous User</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-1 text-purple-500" />
+                      {/* <span>{feedback.date}</span> */}
+                    </div>
+                    <div className="flex items-center">
+                      <ThumbsUp className="h-4 w-4 mr-1 text-green-500" />
+                      {/* <span>{feedback.likes} likes</span> */}
+                    </div>
                   </div>
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1 text-purple-500" />
-                    <span>{feedback.date}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <ThumbsUp className="h-4 w-4 mr-1 text-green-500" />
-                    <span>{feedback.likes} likes</span>
-                  </div>
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
+                </CardFooter>
+              </Card>
+            ))
+          ) : (
+            <div className="text-center text-gray-600 dark:text-gray-400 mt-4 mb-4">
+              <h2 className="text-lg font-semibold">No Feedbacks Yet</h2>
+              <p>It's quiet for now... Be the first to provide feedback.</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

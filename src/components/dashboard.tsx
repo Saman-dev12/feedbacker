@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { Textarea } from "~/components/ui/textarea"
@@ -15,31 +15,70 @@ import {
 } from "~/components/ui/dialog"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card"
 import Link from 'next/link'
-import { PlusCircle, MessageSquare, ThumbsUp, Calendar, Sparkles } from 'lucide-react'
+import { PlusCircle, MessageSquare, ThumbsUp, Calendar, Sparkles, Trash } from 'lucide-react'
+import axios from 'axios'
+import { createPost, deletePost, getUserPosts } from '~/actions/PostActions'
+import { useRouter } from 'next/navigation'
 
 interface Post {
-  id: number;
-  title: string;
-  description: string;
-  feedbacks: number;
-  likes: number;
-  date: string | undefined;
+    id: number;
+    title: string;
+    description: string;
+    createdAt: Date;
+    updatedAt: Date;
+    createdById: string;
 }
 
 export default function Dashboard() {
-  const [posts, setPosts] = useState<Post[]>([
-    { id: 1, title: "First Feedback Request", description: "Please provide feedback on our new feature.", feedbacks: 5, likes: 12, date: "2023-06-15" },
-    { id: 2, title: "Website Redesign Feedback", description: "We'd love to hear your thoughts on our new website design.", feedbacks: 8, likes: 20, date: "2023-06-10" },
-    { id: 3, title: "New Product Idea", description: "What do you think about our upcoming product?", feedbacks: 3, likes: 7, date: "2023-06-18" },
-  ])
+  const [posts, setPosts] = useState<Post[]>([])
   const [newPost, setNewPost] = useState<{ title: string; description: string }>({ title: '', description: '' })
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
+  
 
-  function handleCreatePost(): void {
-    if (newPost.title && newPost.description) {
-      setPosts([{ id: posts.length + 1, ...newPost, feedbacks: 0, likes: 0, date: new Date().toISOString().split('T')[0] }, ...posts])
-      setNewPost({ title: '', description: '' })
-      setIsOpen(false)
+  async function fetchPosts() {
+    try {
+      const posts = await getUserPosts();
+      if (posts) {
+        setPosts(posts);
+      } else {
+        setError('No posts found');
+      }
+    } catch (error) {
+      setError('Failed to fetch posts');
+    }
+  }
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  async function handleCreatePost() {
+    const formData = new FormData();
+  formData.append('title', newPost.title);
+  formData.append('description', newPost.description);
+    try {
+      const post = await createPost(formData);
+      if (post) {
+        await fetchPosts();
+        setIsOpen(false);
+        setNewPost({ title: '', description: '' });
+        router.push(`/post/${post.id}`)
+      } else {
+        setError('Failed to create post');
+      }
+    } catch (error) {
+      setError('Failed to create post');
+    }
+  }
+
+  async function handleDeletePost(id: number) {
+    try {
+      await deletePost(id);
+      await fetchPosts();
+    } catch (error) {
+      setError('Failed to delete post');
     }
   }
 
@@ -83,7 +122,12 @@ export default function Dashboard() {
           </Dialog>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
+          {error ? (
+            <div className="col-span-full text-center text-red-600 dark:text-red-400 mt-4 mb-4">
+              <h2 className="text-lg font-semibold">Error</h2>
+              <p>{error}</p>
+            </div>
+          ) : posts.length > 0 ? (posts.map((post) => (
             <Card key={post.id} className="bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-gray-900 dark:text-gray-100">{post.title}</CardTitle>
@@ -93,15 +137,15 @@ export default function Dashboard() {
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center">
                     <MessageSquare className="h-4 w-4 mr-1 text-blue-500" />
-                    <span>{post.feedbacks} feedbacks</span>
+                    {/* <span>{post.feedbacks} feedbacks</span> */}
                   </div>
                   <div className="flex items-center">
                     <ThumbsUp className="h-4 w-4 mr-1 text-green-500" />
-                    <span>{post.likes} likes</span>
+                    {/* <span>{post.likes} likes</span> */}
                   </div>
                   <div className="flex items-center">
                     <Calendar className="h-4 w-4 mr-1 text-purple-500" />
-                    <span>{post.date}</span>
+                    {/* <span>{post.date}</span> */}
                   </div>
                 </div>
               </CardContent>
@@ -112,9 +156,20 @@ export default function Dashboard() {
                     View Feedback
                   </Button>
                 </Link>
+                <Button onClick={() => handleDeletePost(post.id)} className="ml-2 bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 text-white">
+                  <Trash className="mr-2 h-4 w-4" />
+                  Delete
+                </Button>
               </CardFooter>
             </Card>
-          ))}
+          ))):(
+            <>
+            <div className="col-span-full text-center text-gray-600 dark:text-gray-400 mt-4 mb-4">
+              <h2 className="text-lg font-semibold">No posts found.</h2>
+              <p>It's quiet for now... Create a new post to get started.</p>
+            </div>
+            </>
+          )}
         </div>
       </div>
     </div>

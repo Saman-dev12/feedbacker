@@ -1,23 +1,29 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Button } from "~/components/ui/button"
 import { Textarea } from "~/components/ui/textarea"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card"
 import { Send, CheckCircle, ArrowLeft, Shield } from 'lucide-react'
 import Link from 'next/link'
+import { createFeedback } from '~/actions/feedbackActions'
 
 export default function FeedbackSubmission({id}:{id:number}) {
   const [feedback, setFeedback] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const router = useRouter()
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     if (feedback) {
-      // Here you would typically send the feedback to your backend
-      console.log('Feedback submitted:', feedback)
-      setIsSubmitted(true)
-      setFeedback('')
+      //use feedback actions
+      const response = await createFeedback(id, feedback)
+      if (response) {
+        setIsSubmitted(true)
+        setFeedback('')
+        
+      }
+
     }
   }
 

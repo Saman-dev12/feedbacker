@@ -6,7 +6,7 @@ import { MessageSquare, Zap, Shield, ChevronRight, Star } from "lucide-react"
 
 export default function HeroSection() {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-blue-100 via-white to-blue-50 dark:from-blue-950 dark:via-gray-900 dark:to-blue-950 max-h-[calc(100vh-4.1rem)] flex flex-col justify-center">
+    <div className="relative overflow-hidden bg-gradient-to-b from-blue-100 via-white to-blue-50 dark:from-blue-950 dark:via-gray-900 dark:to-blue-950 min-h-screen flex flex-col justify-center">
       <div className="absolute inset-0">
         <svg
           className="absolute left-full transform -translate-x-1/2 -translate-y-1/4"
