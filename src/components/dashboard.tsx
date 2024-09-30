@@ -97,7 +97,7 @@ export default function Dashboard() {
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">Create New Post</DialogTitle>
                 <DialogDescription className="text-gray-600 dark:text-gray-400">
-                  Create a new post to receive feedback. Click save when you're done.
+                  Create a new post to receive feedback. Click save when you&apos;re done.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
@@ -165,7 +165,7 @@ export default function Dashboard() {
             <>
             <div className="col-span-full text-center text-gray-600 dark:text-gray-400 mt-4 mb-4">
               <h2 className="text-lg font-semibold">No posts found.</h2>
-              <p>It's quiet for now... Create a new post to get started.</p>
+              <p>It&apos;s quiet for now... Create a new post to get started.</p>
             </div>
             </>
           )}

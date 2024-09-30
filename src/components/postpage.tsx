@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from "~/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card"
 import { Avatar, AvatarFallback } from "~/components/ui/avatar"
@@ -38,12 +38,9 @@ export default function PostPage({id}:{id:number}) {
   const [copied, setCopied] = useState(false)
   const { toast } = useToast()
   const session = useSession()
-  useEffect(() => {
-    getCurrentPost(id);
-    getCurrentFeedbacks(id);
-  }, [id])
 
-  const getCurrentFeedbacks = async(id:number) => {
+  
+  const getCurrentFeedbacks = useCallback(async(id:number) => {
     // use getFeedbacks action
   const response = await getFeedbacks(id);
   if (response) {
@@ -55,9 +52,9 @@ export default function PostPage({id}:{id:number}) {
     });
   }
 
-  }
+  }, [toast])
 
-  const getCurrentPost = async(id:number) => {
+  const getCurrentPost = useCallback(async(id:number) => {
     // use getPost action
   const response = await getPost(id);
 //   console.log(response);
@@ -70,7 +67,13 @@ export default function PostPage({id}:{id:number}) {
     });
   }
     
-  }
+  }, [toast])
+
+
+  useEffect(() => {
+    getCurrentPost(id);
+    getCurrentFeedbacks(id);
+  }, [id,getCurrentFeedbacks,getCurrentPost])
 
   const pageUrl = typeof window !== 'undefined' ? window.location.href : ''
 
@@ -187,7 +190,7 @@ export default function PostPage({id}:{id:number}) {
           ) : (
             <div className="text-center text-gray-600 dark:text-gray-400 mt-4 mb-4">
               <h2 className="text-lg font-semibold">No Feedbacks Yet</h2>
-              <p>It's quiet for now... Be the first to provide feedback.</p>
+              <p>It&apos;s quiet for now... Be the first to provide feedback.</p>
             </div>
           )}
         </div>
