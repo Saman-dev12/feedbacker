@@ -1,10 +1,10 @@
 import React from 'react'
+import Dashboard from '~/components/dashboard'
 
 function dashboard() {
   return (
-    <div className='bg-white dark:bg-black  '>
-      dashboard
-      dashboard
+    <div>
+      <Dashboard/>
     </div>
   )
 }

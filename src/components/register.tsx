@@ -20,7 +20,6 @@ const Register: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { theme } = useTheme();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,8 +51,8 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center ${theme === 'light' ? 'bg-gradient-to-r from-blue-100 to-purple-100' : 'bg-gradient-to-t from-gray-900 to-gray-950'} py-12 px-4 sm:px-6 lg:px-8`}>
-      <div className={`max-w-md w-full space-y-8 ${theme === 'light' ? 'bg-white' : 'dark:bg-gray-800'} p-10 rounded-xl shadow-2xl`}>
+    <div className={`min-h-screen flex items-center justify-center  bg-gradient-to-r from-blue-100 to-purple-100  dark:bg-gradient-to-t dark:from-gray-900 dark:to-gray-950 py-12 px-4 sm:px-6 lg:px-8`}>
+      <div className={`max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-10 rounded-xl shadow-2xl`}>
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">Create your account</h2>
           <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">

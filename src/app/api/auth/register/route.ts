@@ -5,13 +5,20 @@ import bcrypt from "bcryptjs";
 
 const registerSchema = z.object({
   email: z.string().email(),
-  name: z.string(),
+  name: z.string().min(3, { message: "Name must be at least 3 characters long" }),
   password: z.string(),
 });
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const payload = registerSchema.parse(body);
+    const result = registerSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({
+        status: 400,
+        errors: result.error.errors,
+      });
+    }
+    const payload = result.data;
 
     // * Check email if it already exists
     const isEmailExist = await prisma.user.findUnique({

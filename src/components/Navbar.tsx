@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
 
   const logout = async () => {
     try {
-      await signOut({ callbackUrl: '/' });
+      await signOut({ callbackUrl: '/login' });
     } catch (error) {
       console.error('Logout error:', error);
     }
