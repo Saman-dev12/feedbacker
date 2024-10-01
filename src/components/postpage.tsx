@@ -162,7 +162,7 @@ export default function PostPage({id}:{id:number}) {
                 <CardHeader>
                   <div className="flex items-start space-x-4">
                     <Avatar>
-                      <AvatarFallback>{feedback.id}</AvatarFallback>
+                      <AvatarFallback><User className="h-4 w-4 mr-1 text-blue-500" /></AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
                       <CardDescription className="text-gray-700 dark:text-gray-300 text-lg">{feedback.content}</CardDescription>

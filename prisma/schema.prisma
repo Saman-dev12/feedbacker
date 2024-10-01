@@ -43,7 +43,7 @@ model Feedback {
     content     String   // The actual feedback content
     createdAt   DateTime @default(now())
     postId      Int      // Foreign key to Post
-    post        Post     @relation(fields: [postId], references: [id])
+    post        Post     @relation(fields: [postId], references: [id],onDelete: Cascade)
     nickname    String?  // Optional nickname for the user providing feedback
     isAnonymous Boolean  @default(true) // Indicates if feedback is anonymous
 

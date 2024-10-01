@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 >
                   <span className="sr-only">Open user menu</span>
-                  <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${getUserColor(session.user.name)}`}>
+                  <div className={`w-10 h-10 flex items-center justify-center rounded-full text-white ${getUserColor(session.user.name || '')}`}>
                     {userNameInitial}
                   </div>
                 </button>
@@ -110,7 +110,7 @@ const Navbar: React.FC = () => {
         <div className="pt-4 pb-3 border-t border-gray-200">
           {session?.user ? (
             <div className="flex items-center px-5">
-              <div className={`flex-shrink-0 h-10 w-10 rounded-full ${getUserColor(session.user.name)} flex items-center justify-center`}>
+              <div className={`flex-shrink-0 h-10 w-10 rounded-full ${getUserColor(session.user.name || '')} flex items-center justify-center`}>
                 <span className="text-white font-medium">{userNameInitial}</span>
               </div>
               <div className="ml-3">

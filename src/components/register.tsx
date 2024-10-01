@@ -11,6 +11,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Alert, AlertDescription } from './ui/alert';
 import { signIn } from 'next-auth/react';
+import { register } from '~/actions/authActions';
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -33,11 +34,11 @@ const Register: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('/api/auth/register', { email, name, password });
+      const response = await register( email, name, password );
       if (response.status === 200) {
         router.push('/login');
       } else {
-        setError(response.data.message || 'Registration failed');
+        setError(response.message || 'Registration failed');
       }
     } catch (err) {
       setError((err as any).response?.data?.message || 'Registration failed');
